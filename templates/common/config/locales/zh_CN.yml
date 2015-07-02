@@ -32,9 +32,9 @@ zh_CN:
   index_num: 编号
   actions: 操作
   show: ""
-  system_name: 快速后台管理
-  website_title: 去快速后台管理
-  company: 去快速后台管理
+  system_name: Sun Admin
+  website_title: Sun Admin
+  company: Sun Admin 
 
   admin_manage: Admin管理 
   roles_manage: 角色管理
@@ -51,6 +51,7 @@ zh_CN:
   query: 查询 
   stats: 统计分析 
   logout: 注销 
+  login: 登陆 
 
   awesome_form_attributes:
     displayed_columns:

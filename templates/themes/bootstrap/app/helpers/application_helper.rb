@@ -77,4 +77,15 @@ module ApplicationHelper
     label = content_tag(:label, "预计#{mins}分钟", class: "label label-warning") 
     raw "#{qtask.time} #{qtask.title} #{label}" 
   end
+
+  def top_menus
+    menu = []
+    login_menu = [{"login" => ""}]
+    menus = [
+      {'admin' => %w(users roles resources)}
+    ]
+    return login_menu unless current_user
+    return menus if current_user.is_admin?
+    menu
+  end
 end

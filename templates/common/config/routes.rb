@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
-  get "first_page" => 'home#index'
+  root 'home#index'
 
   get "logout" => "session#logout"
+  get "login" => "session#login"
 
   resources :users
   resources :roles

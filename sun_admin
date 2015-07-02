@@ -1,12 +1,60 @@
 #!/usr/bin/env ruby  
 
+require "./file_writer"
+require "yaml"
+require "pry"
+
+TemplatePath = File.expand_path("../", __FILE__)
+ProjectPath = File.expand_path("../", __FILE__)
+
 action = ARGV.shift
 gtype = ARGV.shift
 
+def new_project(project_name, db, theme)
+  system("rails new #{project_name} --skip-bundle") unless Dir.exist?(project_name)
+  init_gemfile(project_name)
+  init_db(project_name, db)
+  system("cd #{project_name} && bundle install") unless File.exist?(gemfile(project_name) + ".lock")
+  system("cd #{project_name} && rails g awesome_form_attributes:config")
+  copy_templates(project_name, theme)
+end
+
+def gemfile(project_name)
+  "#{project_name}/Gemfile"
+end
+
+def init_gemfile(project_name)
+  f = FileWriter.new(gemfile(project_name))
+  f.replace("rubygems","ruby.taobao")
+   .replace("sqlite3", "mysql2")
+   .insert("gem 'awesome_form_attributes', '1.0.0'", -1)
+   .insert("gem 'slim-rails'", -1)
+   .insert("gem 'bootstrap-sass', '~> 3.2.0'", -1)
+   .insert("gem 'kaminari'", -1)
+  f.save!
+end
+
+def init_db(project_name, db)
+  default = {"username" => "root", "database" => db, 
+             "password" => "", "adapter" => "mysql2"}
+  db_file = "#{project_name}/config/database.yml"
+  db_config = YAML.load_file(db_file)
+  db_config.values.map{|k| k.merge!(default)}
+  File.open(db_file, 'w'){|f| YAML.dump(db_config, f)}  
+  system("cd #{project_name} && bundle exec rake db:create")
+end
+
+def copy_templates(project_name, theme)
+  base = "#{TemplatePath}/templates/"
+  files = ["common","themes/#{theme}"]
+  files.map {|f| system("cp -rf #{base}#{f}/* #{project_name}/")}
+end
+
 if action == "new"
-  theme = ARGV.shift
+  db = ARGV.shift || "admin"
+  theme = ARGV.shift || "bootstrap"
   raise "There must be a project name" if gtype.nil?
-  `rails new #{gtype}`  
+  new_project(gtype, db, theme)
 else
   if gtype == "model"
     model = ARGV.shift

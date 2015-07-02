@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby  
+
+action = ARGV.shift
+gtype = ARGV.shift
+
+if action == "new"
+  theme = ARGV.shift
+  raise "There must be a project name" if gtype.nil?
+  `rails new #{gtype}`  
+else
+  if gtype == "model"
+    model = ARGV.shift
+    puts "Begin Generate Model ... #{model}"  
+    ARGV.each do |column|
+      cname, ctype, ctitle = column.split(":")
+    end
+  elsif gtype == "migration"
+    migration = ARGV
+    puts "Begin Generate Migration ... "  
+  end
+end

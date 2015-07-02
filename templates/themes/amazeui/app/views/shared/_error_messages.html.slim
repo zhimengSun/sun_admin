@@ -1,0 +1,8 @@
+- if target.errors.any?
+  .am-alert.am-alert-danger data-am-alert=""
+    a.am-close
+     | x
+    p: strong = "#{target.errors.count}个错误！"
+    ol
+      - target.errors.full_messages.each do |msg|
+        li = msg

@@ -1,0 +1,9 @@
+= page_header t(action_name) + t(obj_str)
+- obj = single_obj
+.am-margin
+  table class='#{table_class}'
+    - klass.used_attrs.each do |a|
+      tr
+        td = localize_attr(a)
+        td = single_obj.send(a) 
+  = link_to_back

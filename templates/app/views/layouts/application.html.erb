@@ -1,0 +1,74 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title><%= @page_title || t(:website_title) %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="stylesheet" href="/assets/css/amazeui.min.css"/>
+  <link rel="stylesheet" href="/assets/css/admin.css">
+  <%= stylesheet_link_tag "application" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<header class="am-topbar admin-header">
+  <div class="am-topbar-brand">
+    <strong><%= t(:system_name) %></strong> <small><%= @bread_title || current_user.try(:realname) %></small>
+  </div>
+  <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+    <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
+      <li class="am-dropdown" data-am-dropdown>
+        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+          <span class="am-icon-users"></span><%= t(:admin_manage) %><span class="am-icon-caret-down"></span>
+        </a>
+        <ul class="am-dropdown-content">
+          <li><a href="/users"><span class="am-icon-user"></span> <%= t(:users_manage) %></a></li>
+          <li><a href="/roles"><span class="am-icon-cog"></span> <%= t(:roles_manage) %></a></li>
+        </ul>
+      </li>
+      <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="am-cf admin-main">
+  <%= render "shared/left_menu" %>
+
+  <div class="admin-content">
+    <% [:info, :danger].each do |ftype| %>
+      <% if flash[ftype] %>
+         <div class="am-alert am-alert-<%= ftype.to_s %>" data-am-alert="">
+           <button class='am-close'>X</button>
+           <p><%= flash[ftype] %></p>
+         </div>
+      <% end %>
+    <% end %>
+    <%= yield %> 
+  </div>
+
+</div>
+
+<a class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+
+<footer>
+  <hr>
+  <p class="am-padding-left">© <%= Time.now.year %> <%= t(:company) %>.</p>
+</footer>
+
+<!--[if lt IE 9]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="assets/js/polyfill/rem.min.js"></script>
+<script src="assets/js/polyfill/respond.min.js"></script>
+<script src="assets/js/amazeui.legacy.js"></script>
+<![endif]-->
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="/assets/js/amazeui.min.js"></script>
+<!--<![endif]-->
+<script src="/assets/js/app.js"></script>
+</body>
+</html>

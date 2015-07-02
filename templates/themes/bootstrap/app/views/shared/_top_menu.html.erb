@@ -1,0 +1,31 @@
+<ul class="nav navbar-nav">
+   <% top_menus.each do |menus|
+     menu = menus.keys[0] 
+     sub_menus = menus.values[0]
+     if sub_menus.is_a?(Array) %>
+
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= t(menu) %><span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+          <% sub_menus.each do |sm| %>
+            <li><a href="/<%= sm %>"><%= t(sm) %></a></li>
+          <% end %>
+        </ul>
+      </li>
+      <% else %>
+        <li <%= request.path == send("#{menu}_path") ? "class=active" : "" %>>
+          <%= link_to t(menu), send("#{menu}_path") %>
+        </li>
+      <% end %>
+    <% end %>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">我的账户<span class="caret"></span></a>
+    <ul class="dropdown-menu" role="menu">
+      <li><a href="<%= user_path(current_user) %>"><%= current_user.try(:email) %></a></li>
+      <li><a href="<%= about_path %>">About System</a></li>
+      <li><%= link_to "退出登录", logout_path %></li>
+    </ul>
+  </li>
+</ul>

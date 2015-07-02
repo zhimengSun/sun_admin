@@ -16,8 +16,8 @@ class FileWriter
     self
   end
 
-  def insert(content, line_num = -3)
-    @content = lines.insert(line_num, content).join("\n")
+  def insert(new_content, line_num = -3)
+    @content = lines.insert(line_num, new_content).join("\n") if @content =~ /#{new_content}/
     self
   end
 

@@ -13,8 +13,8 @@ gtype = ARGV.shift
 def new_project(project_name, db, theme)
   system("rails new #{project_name} --skip-bundle") unless Dir.exist?(project_name)
   init_gemfile(project_name)
+  # system("cd #{project_name} && bundle install") unless File.exist?(gemfile(project_name) + ".lock")
   init_db(project_name, db)
-  system("cd #{project_name} && bundle install") unless File.exist?(gemfile(project_name) + ".lock")
   system("cd #{project_name} && rails g awesome_form_attributes:config")
   copy_templates(project_name, theme)
 end
@@ -41,7 +41,9 @@ def init_db(project_name, db)
   db_config = YAML.load_file(db_file)
   db_config.values.map{|k| k.merge!(default)}
   File.open(db_file, 'w'){|f| YAML.dump(db_config, f)}  
-  system("cd #{project_name} && bundle exec rake db:create")
+  %w(create migrate seed).map do |action| 
+    system("cd #{project_name} && bundle exec rake db:#{action}")
+  end
 end
 
 def copy_templates(project_name, theme)

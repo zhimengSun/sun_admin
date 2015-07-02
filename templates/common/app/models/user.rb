@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
-  has_and_belongs_to_many :roles, join_table: "user_roles"
+  has_and_belongs_to_many :roles
   has_many :resources, through: :roles
 
-  validates :email, :realname, presence: true
+  validates :email, :name, presence: true
   validates :email, length: 6..50, 
                     uniqueness: true,
                     format: /\A[-a-z0-9_+\.]+\@([-a-z0-9]+\.)+[a-z0-9]{2,4}\z/i

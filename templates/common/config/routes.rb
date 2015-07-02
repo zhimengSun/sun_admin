@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   get "logout" => "session#logout"
   get "login" => "session#login"
+  post "login" => "session#login"
 
   resources :users
   resources :roles

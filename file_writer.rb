@@ -4,7 +4,7 @@ class FileWriter
 
   def initialize(file)
     @file = file
-    @content = File.read(@file)
+    @content = File.exist?(file) ? File.read(@file) : ""
   end
 
   def lines
@@ -21,9 +21,27 @@ class FileWriter
     self
   end
 
+  def search_method(n)
+    lines.each_with_index do |line, i|
+      return i if line =~ /def[\s\t]+#{n}/
+    end
+    lines.size 
+  end
+
+  def search_line_in_method(mn, line_content)
+    method_line = search_method(mn)
+    lines.each_with_index do |line, i|
+      next if i <= method_line
+      return i if line =~ /#{line_content}/
+    end
+    lines.size 
+  end
+
   def save!
     File.open(@file, "wb"){|f| f.puts(@content) }
   end
+
+  def save;save! end
 
   private
   def deal_data

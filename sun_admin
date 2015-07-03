@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby  
 
-require "./file_writer"
+require File.expand_path("../file_writer", __FILE__)
 require "yaml"
+require "active_record"
 require "pry"
 
 TemplatePath = File.expand_path("../", __FILE__)
@@ -16,7 +17,7 @@ def new_project(project_name, db, theme)
   # system("cd #{project_name} && bundle install") unless File.exist?(gemfile(project_name) + ".lock")
   copy_templates(project_name, theme)
   init_db(project_name, db)
-  system("cd #{project_name} && rails g awesome_form_attributes:config")
+  run("rails g awesome_form_attributes:config", project_name)
 end
 
 def gemfile(project_name)
@@ -44,14 +45,74 @@ def init_db(project_name, db)
   db_config.values.map{|k| k.merge!(default)}
   File.open(db_file, 'w'){|f| YAML.dump(db_config, f)}  
   %w(create migrate seed).map do |action| 
-    system("cd #{project_name} && bundle exec rake db:#{action}")
+    run("rake db:#{action}", project_name)
   end
+end
+
+def rewrite_yaml(file)
+  datas = YAML.load_file(file)
+  yield datas
+  File.open(file, 'w'){|f| YAML.dump(datas, f)}  
 end
 
 def copy_templates(project_name, theme)
   base = "#{TemplatePath}/templates/"
   files = ["common","themes/#{theme}"]
   files.map {|f| system("cp -rf #{base}#{f}/* #{project_name}/")}
+end
+
+def run(command, path = nil)
+  return system("cd #{path} && bundle exec #{command}") if path
+  system("bundle exec #{command}")
+end
+
+def generate_model(args = [])
+  model, model_title = args.shift.split(":")
+  table = ActiveSupport::Inflector.pluralize(model)
+  f = FileWriter.new("config/routes.rb")
+  f.insert("  resources :#{table}", -2)
+  f.save!
+  puts "Add to Routes Ready!"  
+  puts "Begin to generate model and to db ... #{model}"  
+  normal_model_g, titles = [], []
+  column_with_titles = {}
+  args.each do |column|
+    cname, ctype, ctitle = column.split(":")
+    column_with_titles[cname] = ctitle
+    normal_model_g << "#{cname}:#{ctype}"
+    titles << ctitle
+  end
+  run("rails g model #{model} #{normal_model_g.join(" ")}")
+  run("rake db:migrate") rescue puts("Db Error!!") 
+  generate_controller(table)
+  config_model_to_local(model, table, model_title, column_with_titles)
+  config_model_to_view(table)
+end
+
+def config_model_to_local(model, table, model_title, column_with_titles)
+  puts "Begin to config in locales... #{table}"  
+  rewrite_yaml("config/locales/zh_CN.yml") do |datas|
+    datas["zh_CN"]["activerecord"]["models"].merge!(model => model_title)
+    datas["zh_CN"].merge!(table => model_title + "管理")
+    datas["zh_CN"].merge!(model => model_title)
+    datas["zh_CN"]["activerecord"]["attributes"].merge!(model => column_with_titles)
+  end
+end
+
+def generate_controller(table)
+  puts "Begin to config in controllers... #{table}"  
+  f = FileWriter.new("app/controllers/#{table}_controller.rb")
+  f.insert("class #{ActiveSupport::Inflector.titleize(table)}Controller < SunAdminBaseController",-1)
+  f.insert("end",-1)
+  f.save!
+end
+
+def config_model_to_view(table)
+  puts "Begin to config in views... #{table}"  
+  f = FileWriter.new("app/helpers/application_helper.rb")
+  pos = f.search_line_in_method("top_menus","menus = ")
+  f.insert(" " * (f.lines[pos] =~ /\s[a-z]+/) + "{'#{table}' => ''},", pos + 1)
+  f.save!
 end
 
 if action == "new"
@@ -61,11 +122,7 @@ if action == "new"
   new_project(gtype, db, theme)
 else
   if gtype == "model"
-    model = ARGV.shift
-    puts "Begin Generate Model ... #{model}"  
-    ARGV.each do |column|
-      cname, ctype, ctitle = column.split(":")
-    end
+    generate_model(ARGV)
   elsif gtype == "migration"
     migration = ARGV
     puts "Begin Generate Migration ... "  

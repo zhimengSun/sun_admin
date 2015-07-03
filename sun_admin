@@ -14,7 +14,7 @@ gtype = ARGV.shift
 def new_project(project_name, db, theme)
   system("rails new #{project_name} --skip-bundle") unless Dir.exist?(project_name)
   init_gemfile(project_name)
-  # system("cd #{project_name} && bundle install") unless File.exist?(gemfile(project_name) + ".lock")
+  system("cd #{project_name} && bundle install") unless File.exist?(gemfile(project_name) + ".lock")
   copy_templates(project_name, theme)
   init_db(project_name, db)
   run("rails g awesome_form_attributes:config", project_name)
@@ -28,7 +28,7 @@ def init_gemfile(project_name)
   f = FileWriter.new(gemfile(project_name))
   f.replace("rubygems","ruby.taobao")
    .replace("sqlite3", "mysql2")
-   .insert("gem 'awesome_form_attributes', '1.0.0'", -1)
+   .insert("gem 'awesome_form_attributes', '1.1.0'", -1)
    .insert("gem 'slim-rails'", -1)
    .insert("gem 'bootstrap-sass', '~> 3.2.0'", -1)
    .insert("gem 'kaminari'", -1)
@@ -44,7 +44,7 @@ def init_db(project_name, db)
   db_config = YAML.load_file(db_file)
   db_config.values.map{|k| k.merge!(default)}
   File.open(db_file, 'w'){|f| YAML.dump(db_config, f)}  
-  %w(create migrate seed).map do |action| 
+  %w(drop create migrate seed).map do |action| 
     run("rake db:#{action}", project_name)
   end
 end
@@ -67,26 +67,39 @@ def run(command, path = nil)
 end
 
 def generate_model(args = [])
+  return puts "please input the model" if args.empty?
   model, model_title = args.shift.split(":")
+  return puts "Plese input the Chinese title for model #{model}:" if model_title.nil?
   table = ActiveSupport::Inflector.pluralize(model)
-  f = FileWriter.new("config/routes.rb")
-  f.insert("  resources :#{table}", -2)
-  f.save!
-  puts "Add to Routes Ready!"  
   puts "Begin to generate model and to db ... #{model}"  
   normal_model_g, titles = [], []
   column_with_titles = {}
   args.each do |column|
-    cname, ctype, ctitle = column.split(":")
+    cname, ctype, ctitle = cs = column.split(":")
+    raise "Params is not correct" if cs.size != 3
     column_with_titles[cname] = ctitle
     normal_model_g << "#{cname}:#{ctype}"
     titles << ctitle
   end
   run("rails g model #{model} #{normal_model_g.join(" ")}")
   run("rake db:migrate") rescue puts("Db Error!!") 
+  config_routes(table)
   generate_controller(table)
   config_model_to_local(model, table, model_title, column_with_titles)
   config_model_to_view(table)
+end
+
+def check_model_params(cs)
+   return "some params in thie model probily are incorrect" if cs.size != 3
+   return "format are incorrect" if cs.any?{|c| !(c[1] =~ /[a-z]+/)}
+   false 
+end
+
+def config_routes(table)
+  f = FileWriter.new("config/routes.rb")
+  f.insert("  resources :#{table}", -2)
+  f.save!
+  puts "Add to Routes Ready!"  
 end
 
 def config_model_to_local(model, table, model_title, column_with_titles)

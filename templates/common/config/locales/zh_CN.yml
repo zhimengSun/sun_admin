@@ -52,7 +52,7 @@ zh_CN:
   stats: 统计分析 
   logout: 注销 
   login: 登陆 
-  login_failed: 登陆失败
+  login_failed: 账号或密码不正确
   email: 邮箱 
   password: 密码 
   permission_denied: 您无此权限

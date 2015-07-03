@@ -52,6 +52,8 @@ zh_CN:
   stats: 统计分析 
   logout: 注销 
   login: 登陆 
+  email: 邮箱 
+  password: 密码 
 
   awesome_form_attributes:
     displayed_columns:

@@ -116,8 +116,8 @@ def config_model_to_view(table)
 end
 
 if action == "new"
-  db = ARGV.shift || "admin"
   theme = ARGV.shift || "bootstrap"
+  db = ARGV.shift || "admin"
   raise "There must be a project name" if gtype.nil?
   new_project(gtype, db, theme)
 else

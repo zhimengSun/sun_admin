@@ -1,0 +1,31 @@
+<header class="am-topbar admin-header">
+  <div class="am-topbar-brand">
+    <strong><%= t(:system_name) %></strong> <small><%= @bread_title || current_user.try(:realname) %></small>
+  </div>
+  <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+    <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
+      <% top_menus.each do |menus|
+         menu = menus.keys[0]
+         sub_menus = menus.values[0]
+         if sub_menus.is_a?(Array) %>
+            <li class="am-dropdown" data-am-dropdown>
+              <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                <span class="am-icon-users"></span><%= t(menu) %><span class="am-icon-caret-down"></span>
+              </a>
+              <ul class="am-dropdown-content">
+                 <% sub_menus.each do |sm| %>
+                   <li><a href="/<%= sm %>"><%= t(sm) %></a></li>
+                 <% end %>
+              </ul>
+            </li>
+          <% else %>
+            <li <%= request.path == send("#{menu}_path") ? "class=active" : "" %>>
+              <%= link_to t(menu), send("#{menu}_path") %>
+            </li>
+          <% end %>
+      <% end %>
+      <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
+    </ul>
+  </div>
+</header>
+

@@ -1,7 +1,5 @@
 module ApplicationHelper
-
   include SharedHelper if defined?(SharedHelper)
-
   def page_header(title)
     str = content_tag(:strong, title, class: "am-text-primary am-text-lg")
     div = content_tag(:div, str, class: "am-fl am-cf")
@@ -57,5 +55,16 @@ module ApplicationHelper
 
   def back_button
     link_to_back
+  end
+
+  def top_menus
+    menu = []
+    login_menu = [{"login" => ""}]
+    menus = [
+      {'admin' => %w(users roles resources)}
+    ]
+    return login_menu unless current_user
+    return menus if current_user.is_admin?
+    menu
   end
 end

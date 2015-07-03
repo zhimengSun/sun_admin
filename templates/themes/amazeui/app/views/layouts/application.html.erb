@@ -14,28 +14,9 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-<header class="am-topbar admin-header">
-  <div class="am-topbar-brand">
-    <strong><%= t(:system_name) %></strong> <small><%= @bread_title || current_user.try(:realname) %></small>
-  </div>
-  <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
-    <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
-      <li class="am-dropdown" data-am-dropdown>
-        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
-          <span class="am-icon-users"></span><%= t(:admin_manage) %><span class="am-icon-caret-down"></span>
-        </a>
-        <ul class="am-dropdown-content">
-          <li><a href="/users"><span class="am-icon-user"></span> <%= t(:users_manage) %></a></li>
-          <li><a href="/roles"><span class="am-icon-cog"></span> <%= t(:roles_manage) %></a></li>
-        </ul>
-      </li>
-      <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
-    </ul>
-  </div>
-</header>
-
+<%= render "shared/top_menu" %>
 <div class="am-cf admin-main">
-  <%= render "shared/left_menu" %>
+  <%= render "shared/left_menu" if current_user %>
 
   <div class="admin-content">
     <% [:info, :danger].each do |ftype| %>

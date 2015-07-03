@@ -1,0 +1,17 @@
+<div class="am-g margin">
+  <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+    <h3>登录</h3>
+    <br>
+    <%= form_tag login_path, class: "am-form" do %>
+      <label for="email">邮箱:</label>
+      <input type="email" name="login" id="email" value="">
+      <br>
+      <label for="password">密码:</label>
+      <input type="password" name="password" id="password" value="">
+      <br>
+      <div class="am-cf">
+        <input type="submit" name="" value="登 录" class="am-btn am-btn-primary am-btn-sm am-fl">
+      </div>
+    <% end %>
+  </div>
+</div>

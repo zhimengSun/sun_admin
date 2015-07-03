@@ -56,28 +56,6 @@ module ApplicationHelper
     content_tag(:div, htitle, class: "page-header")
   end
 
-  def task_selector(time_type, end_no, start_no = 1)
-    select :qtask, time_type, options_for_select([nil] + start_no.upto(end_no).to_a, @qtask.send(time_type))
-  end
-
-  def running_class(task)
-    return "" unless controller_name =~ /tasks/ 
-    return "gray" unless task.is_open
-    h = task.histories.where(stat_date: Date.yesterday.to_s).first
-    h.try(:running?) || @running_ids.include?(task.id) ? 'shine' : (h ? '' : 'red')
-  end
-
-  def status_class(col, obj)
-    return "" unless obj.is_a?(History) && col == 'status_s'
-    "status #{obj.status_s == 'success' ? 'green' : 'red'}"
-  end
-
-  def label_for(qtask)
-    mins = qtask.predict_minutes
-    label = content_tag(:label, "预计#{mins}分钟", class: "label label-warning") 
-    raw "#{qtask.time} #{qtask.title} #{label}" 
-  end
-
   def top_menus
     menu = []
     login_menu = [{"login" => ""}]

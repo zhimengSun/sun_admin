@@ -2,8 +2,12 @@
   <div class="am-offcanvas-bar admin-offcanvas-bar am-margin-top">
     <ul class="am-list admin-sidebar-list">
       <li><a href="/"><span class="am-icon-home"></span> <%= t(:home) %></a></li>
-      <li><a href="/users"><span class="am-icon-cog"></span> <%= t(:admin_manage) %> </a></li>
-      <li><a href="/logout"><span class="am-icon-sign-out"></span> <%= t(:logout) %></a></li>
+      <% if current_user %>
+        <% if current_user.is_admin? %>
+          <li><a href="/users"><span class="am-icon-cog"></span> <%= t(:admin_manage) %> </a></li>
+        <% end %>
+        <li><a href="/logout"><span class="am-icon-sign-out"></span> <%= t(:logout) %></a></li>
+      <% end %>
     </ul>
   </div>
 </div>

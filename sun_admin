@@ -14,9 +14,9 @@ def new_project(project_name, db, theme)
   system("rails new #{project_name} --skip-bundle") unless Dir.exist?(project_name)
   init_gemfile(project_name)
   # system("cd #{project_name} && bundle install") unless File.exist?(gemfile(project_name) + ".lock")
+  copy_templates(project_name, theme)
   init_db(project_name, db)
   system("cd #{project_name} && rails g awesome_form_attributes:config")
-  copy_templates(project_name, theme)
 end
 
 def gemfile(project_name)
@@ -31,6 +31,8 @@ def init_gemfile(project_name)
    .insert("gem 'slim-rails'", -1)
    .insert("gem 'bootstrap-sass', '~> 3.2.0'", -1)
    .insert("gem 'kaminari'", -1)
+   .insert("gem 'bcrypt'", -1)
+   .insert("gem 'pry'", -1)
   f.save!
 end
 

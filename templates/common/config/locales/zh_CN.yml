@@ -40,9 +40,9 @@ zh_CN:
   roles_manage: 角色管理
   roles: 角色管理
   role: 角色
-  resources_manage: 资源管理
-  resources: 资源管理
-  resource: 资源
+  resources_manage: 权限管理
+  resources: 权限管理
+  resource: 权限
   users_manage: 用户管理
   users: 用户管理
   user: 用户
@@ -52,14 +52,16 @@ zh_CN:
   stats: 统计分析 
   logout: 注销 
   login: 登陆 
+  login_failed: 登陆失败
   email: 邮箱 
   password: 密码 
+  permission_denied: 您无此权限
 
   awesome_form_attributes:
     displayed_columns:
       user:
         email: Email
-        realname: Name
+        name: Name
         role_names: 角色
 
   views:
@@ -73,7 +75,7 @@ zh_CN:
   activerecord:
     models:
       role: 角色
-      resource: 资源
+      resource: 权限 
       user: 用户
       qtask: 任务
     attributes:
@@ -81,11 +83,12 @@ zh_CN:
         name: 角色名称
         desc: 角色描述
       resource:
-        name: 资源名称
+        name: 权限名称
         url: "URL"
       user:
         email: 电子邮件
-        realname: 真实姓名
+        name: 真实姓名
+        password: 密码
         
   errors:
     messages:

@@ -13,7 +13,7 @@
 *= require_tree .
 *= require_self
 */
-.margin {
+.margin, .m10 {
   margin: 10px;
 }
 .ml10 {

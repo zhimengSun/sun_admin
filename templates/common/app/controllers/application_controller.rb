@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
     def require_login_or_permission
       return redirect_to login_path unless session[:user_id]
       return true if current_user.can_access?(request.path) || current_user.is_admin?
-      flash[:danger] = "您无此权限"
+      flash[:danger] = I18n.t(:permission_denied)
       redirect_to root_path
     end
 
@@ -26,6 +26,8 @@ class ApplicationController < ActionController::Base
     end
 
     def auth_admin
-      return redirect_to root_path unless current_user.is_admin?
+      return true if current_user.is_admin?
+      flash[:danger] = I18n.t(:permission_denied)
+      redirect_to root_path unless current_user.is_admin?
     end
 end

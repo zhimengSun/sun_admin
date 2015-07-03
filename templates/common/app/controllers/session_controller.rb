@@ -1,10 +1,14 @@
 class SessionController < ApplicationController
   skip_before_action :require_login_or_permission
+
   def login
+    return if request.get?
     current_user = auth_login(params[:login], params[:password])
-    redirect_to root_path if current_user
-    flash[:danger] = "登录失败"
-  end
+    return flash[:danger] = I18n.t(:login_failed) unless current_user
+    flash[:info] = "Welcome!!"
+    session[:user_id] = current_user.id 
+    redirect_to root_path 
+  end      
   
   def logout
     reset_session
@@ -14,6 +18,7 @@ class SessionController < ApplicationController
 
   private
   def auth_login(login, password)
-    User.find_by(name: login, password: password)
+    u = User.find_by(email: login)
+    u ? u.authenticate(password) : nil
   end
 end

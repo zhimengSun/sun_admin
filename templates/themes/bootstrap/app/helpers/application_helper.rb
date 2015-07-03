@@ -1,5 +1,5 @@
 module ApplicationHelper
-  
+  include SharedHelper if defined?(SharedHelper)
   def table_class
     'table table-striped table-bordered table-hover'
   end

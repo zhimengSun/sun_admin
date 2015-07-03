@@ -7,7 +7,7 @@ class Role < ActiveRecord::Base
   before_destroy :has_users
   
   def has_users
-    return false if users.size > 0
+    return errors.add(self.name, "该角色有用户不能删除") && false if users.size > 0
   end
   
   def is_admin?

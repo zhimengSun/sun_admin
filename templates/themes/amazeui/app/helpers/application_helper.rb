@@ -1,4 +1,7 @@
 module ApplicationHelper
+
+  include SharedHelper if defined?(SharedHelper)
+
   def page_header(title)
     str = content_tag(:strong, title, class: "am-text-primary am-text-lg")
     div = content_tag(:div, str, class: "am-fl am-cf")

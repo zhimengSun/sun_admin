@@ -1,34 +1,35 @@
 class SunAdminBaseController < ApplicationController
-  before_filter :get_user, only: [:edit, :update, :destroy]
+  before_filter :get_base_obj, only: [:edit, :update, :destroy, :show]
   before_filter :auth_admin, except: :show
-  
+
   def index
-    single_objs = klass.page(params[:page]).per(20)
+    self.collections = klass.page(params[:page]).per(20)
   end
 
   def new
-    single_obj = klass.new
+    self.single_obj = klass.new
   end
 
-  def edit
-  end
+  def edit; end
+  def show; end
 
   def create
-    single_obj = klass.new(params[:user])
+    self.single_obj = klass.new(params[obj_str])
     to_or_not_to?(single_obj)
   end
 
   def update
     back_to_list single_obj.update_attributes(params[obj_str])
   end
-  
+ 
   def destroy
     back_to_list(single_obj.destroy)
   end
 
   private
 
-    def get_user
-      single_obj = klass.find(params[:id])
+    def get_base_obj
+      self.single_obj = klass.find(params[:id])
     end
 end
+

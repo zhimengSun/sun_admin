@@ -7,16 +7,17 @@ require "pry"
 
 TemplatePath = File.expand_path("../", __FILE__)
 ProjectPath = File.expand_path("../", __FILE__)
+Config = YAML.load_file(File.expand_path("../config.yml", __FILE__))
 
 action = ARGV.shift
 gtype = ARGV.shift
 
-def new_project(project_name, db, theme)
+def new_project(project_name, theme)
   system("rails new #{project_name} --skip-bundle") unless Dir.exist?(project_name)
   init_gemfile(project_name)
   system("cd #{project_name} && bundle install") unless File.exist?(gemfile(project_name) + ".lock")
   copy_templates(project_name, theme)
-  init_db(project_name, db)
+  init_db(project_name)
   run("rails g awesome_form_attributes:config", project_name)
 end
 
@@ -37,9 +38,10 @@ def init_gemfile(project_name)
   f.save!
 end
 
-def init_db(project_name, db)
-  default = {"username" => "root", "database" => db, 
-             "password" => "", "adapter" => "mysql2"}
+def init_db(project_name)
+  db_c = Config["database"]
+  default = {"username" => db_c["user"], "database" => db_c["name"], 
+             "password" => db_c["password"], "adapter" => "mysql2"}
   db_file = "#{project_name}/config/database.yml"
   db_config = YAML.load_file(db_file)
   db_config.values.map{|k| k.merge!(default)}
@@ -81,7 +83,7 @@ def generate_model(args = [])
     normal_model_g << "#{cname}:#{ctype}"
     titles << ctitle
   end
-  run("rails g model #{model} #{normal_model_g.join(" ")}")
+  run("rails g model #{model} #{normal_model_g.join(" ")} --force")
   run("rake db:migrate") rescue puts("Db Error!!") 
   config_routes(table)
   generate_controller(table)
@@ -130,9 +132,8 @@ end
 
 if action == "new"
   theme = ARGV.shift || "bootstrap"
-  db = ARGV.shift || "admin"
   raise "There must be a project name" if gtype.nil?
-  new_project(gtype, db, theme)
+  new_project(gtype, theme)
 else
   if gtype == "model"
     generate_model(ARGV)

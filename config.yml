@@ -1,0 +1,6 @@
+database:
+  name: admin
+  user: root
+  password:
+
+

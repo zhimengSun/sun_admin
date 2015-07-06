@@ -19,20 +19,21 @@ class CreateSunAdmins < ActiveRecord::Migration
     create_table :resources do |t|
       t.string :name
       t.string :url
+      t.integer :parent_id
       t.string :desc
 
       t.timestamps null: false
     end
 
     create_table :resources_roles do |t|
-      t.string :resource_id
-      t.string :role_id
+      t.integer :resource_id
+      t.integer :role_id
       t.timestamps null: false
     end
 
     create_table :roles_users do |t|
-      t.string :user_id
-      t.string :role_id
+      t.integer :user_id
+      t.integer :role_id
       t.timestamps null: false
     end
   end

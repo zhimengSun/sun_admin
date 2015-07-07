@@ -18,7 +18,7 @@ def new_project(project_name, theme)
   system("cd #{project_name} && bundle install") unless File.exist?(gemfile(project_name) + ".lock")
   copy_templates(project_name, theme)
   init_db(project_name)
-  run("rails g awesome_form_attributes:config", project_name)
+  # run("rails g awesome_form_attributes:config", project_name)
 end
 
 def gemfile(project_name)

@@ -63,6 +63,10 @@ zh_CN:
         email: Email
         name: Name
         role_names: 角色
+      resource:
+        name: 权限名称
+        url: "URL"
+        parent_name: 父菜单
 
   views:
     pagination:
@@ -85,6 +89,7 @@ zh_CN:
       resource:
         name: 权限名称
         url: "URL"
+        parent_id: 父菜单
       user:
         email: 电子邮件
         name: 真实姓名

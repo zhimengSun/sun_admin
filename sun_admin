@@ -117,7 +117,7 @@ end
 def generate_controller(table)
   puts "Begin to config in controllers... #{table}"  
   f = FileWriter.new("app/controllers/#{table}_controller.rb")
-  f.insert("class #{ActiveSupport::Inflector.titleize(table)}Controller < SunAdminBaseController",-1)
+  f.insert("class #{ActiveSupport::Inflector.titleize(table).gsub(/\s+/,"")}Controller < SunAdminBaseController",-1)
   f.insert("end",-1)
   f.save!
 end

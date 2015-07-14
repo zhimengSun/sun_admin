@@ -3,7 +3,7 @@ class SunAdminBaseController < ApplicationController
   before_filter :auth_admin, except: :show
 
   def index
-    self.collections = klass.page(params[:page]).per(20)
+    self.collections = paginate_objs(klass)
   end
 
   def new
@@ -30,6 +30,11 @@ class SunAdminBaseController < ApplicationController
 
     def get_base_obj
       self.single_obj = klass.find(params[:id])
+    end
+
+    def paginate_objs(objs)
+      objs = objs.is_a?(Array) ? Kaminari.paginate_array(objs) : objs
+      objs.page(params[:page]).per(20)
     end
 end
 

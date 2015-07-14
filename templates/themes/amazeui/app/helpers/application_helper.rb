@@ -6,11 +6,8 @@ module ApplicationHelper
     content_tag(:div, div, class: "am-padding am-cf")
   end
 
-  def link_to_btn(opts = {})
-  end
-
   def table_class(style = "bordered")
-    "am-table am-table-#{style}"
+    "am-table am-table-#{style} am-text-nowrap"
   end
 
   def button_class(opts = {})

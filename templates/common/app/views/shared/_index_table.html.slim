@@ -5,5 +5,7 @@ table class='#{table_class} list-table'
   - collections.each_with_index do |obj, i|
     tr
       = values_for_columns(obj)
-      td width=200 = edit_with_delete(obj)
+      td width=200 
+        = edit_with_delete(obj)
+        = render partial: "#{controller_name}/actions", locals: {obj: obj} if klass.respond_to?(:special_actions)
 = paginate(collections)

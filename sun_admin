@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby  
-
+# encoding: utf-8
 require File.expand_path("../file_writer", __FILE__)
 require "yaml"
 require "active_record"
@@ -29,7 +29,7 @@ def init_gemfile(project_name)
   f = FileWriter.new(gemfile(project_name))
   f.replace("rubygems","ruby.taobao")
    .replace("sqlite3", "mysql2")
-   .insert("gem 'awesome_form_attributes', '1.2.0'", -1)
+   .insert("gem 'awesome_form_attributes', '1.2.1'", -1)
    .insert("gem 'slim-rails'", -1)
    .insert("gem 'bootstrap-sass', '~> 3.2.0'", -1)
    .insert("gem 'kaminari'", -1)
@@ -38,17 +38,17 @@ def init_gemfile(project_name)
   f.save!
 end
 
-def init_db(project_name)
-  db_c = Config["database"]
-  default = {"username" => db_c["user"], "database" => db_c["name"], 
-             "password" => db_c["password"], "adapter" => "mysql2"}
-  db_file = "#{project_name}/config/database.yml"
-  db_config = YAML.load_file(db_file)
-  db_config.values.map{|k| k.merge!(default)}
-  File.open(db_file, 'w'){|f| YAML.dump(db_config, f)}  
-  %w(drop create migrate seed).map do |action| 
-    run("rake db:#{action}", project_name)
+def init_db(project_name, use_mysql = true)
+  if use_mysql
+    db_c = Config["database"]
+    default = {"username" => db_c["user"], "database" => db_c["name"], 
+               "password" => db_c["password"], "adapter" => "mysql2"}
+    db_file = "#{project_name}/config/database.yml"
+    db_config = YAML.load_file(db_file)
+    db_config.values.map{|k| k.merge!(default)}
+    File.open(db_file, 'w'){|f| YAML.dump(db_config, f)}  
   end
+  %w(drop create migrate seed).map {|action| run("rake db:#{action}", project_name) }
 end
 
 def rewrite_yaml(file)
@@ -131,6 +131,7 @@ def config_model_to_view(table)
 end
 
 if action == "new"
+  raise "Sorry, Sun Admin don't supprt ruby #{RUBY_VERSION}" if RUBY_VERSION.split(".")[0].to_i < 2
   theme = ARGV.shift || "bootstrap"
   raise "There must be a project name" if gtype.nil?
   new_project(gtype, theme)

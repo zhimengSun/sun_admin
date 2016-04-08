@@ -47,6 +47,14 @@ module ApplicationHelper
     link_to(title, '#', style.merge(onclick: "history.go(-1); return false;"))
   end
 
+  def permission_collections(model_name, name, collection)
+    collection_check_boxes model_name, name, collection, :id, :name do |b|
+      b.label(class: "am-checkbox am-success") do
+        b.check_box("data-am-ucheck" => "") + b.object.name
+      end
+    end
+  end
+
   def back_button
     link_to_back
   end

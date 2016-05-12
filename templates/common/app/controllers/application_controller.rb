@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
     end
 
     def back_to_list(condition = true, msg = nil)
+      return render(:edit) unless condition
       flash[condition ? :info : :danger] = 
         condition ? "操作成功" : single_obj.errors.full_messages.join("\n")
       flash[:info] = msg if msg

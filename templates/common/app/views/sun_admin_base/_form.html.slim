@@ -8,8 +8,12 @@
         tr
           td 角色配置
           td.check_boxes = permission_collections :user, :role_ids, Role.all
-      - if single_obj.is_a?(Role) !@role.try(:is_admin?)
+      - if single_obj.is_a?(Role) 
+        - if !@role.try(:is_admin?)
+          tr
+            td 权限配置
+            td.check_boxes = permission_collections :role, :resource_ids, Resource.all
         tr
-          td 权限配置
-          td.check_boxes = permission_collections :role, :resource_ids, Resource.all
+          td 该角色用户
+          td.check_boxes = permission_collections :role, :user_ids, User.all
     = save_and_return(f)

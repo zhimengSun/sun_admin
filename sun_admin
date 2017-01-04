@@ -111,7 +111,8 @@ def config_routes(table)
   f = FileWriter.new("config/routes.rb")
   position = -2
   position = f.search_certain_str("namespace :#{SCOPE}") + 1 unless SCOPE.empty?
-  f.insert("  resources :#{table}", position)
+  empty_str = " " * (SCOPE.empty? ? 2 : 4)
+  f.insert("#{empty_str}resources :#{table}", position)
   f.save!
   puts "Add to Routes Ready!"  
 end

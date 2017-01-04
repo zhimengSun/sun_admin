@@ -8,6 +8,9 @@ require "pry"
 TemplatePath = File.expand_path("../", __FILE__)
 ProjectPath = File.expand_path("../", __FILE__)
 Config = YAML.load_file(File.expand_path("../config.yml", __FILE__))
+LOCALE_NAME = Config["locale_name"]
+SCOPE = Config["scope"]
+
 
 action = ARGV.shift
 gtype = ARGV.shift
@@ -106,25 +109,28 @@ end
 
 def config_routes(table)
   f = FileWriter.new("config/routes.rb")
-  f.insert("  resources :#{table}", -2)
+  position = -2
+  position = f.search_certain_str("namespace :#{SCOPE}") + 1 unless SCOPE.empty?
+  f.insert("  resources :#{table}", position)
   f.save!
   puts "Add to Routes Ready!"  
 end
 
 def config_model_to_local(model, table, model_title, column_with_titles)
   puts "Begin to config in locales... #{table}"  
-  rewrite_yaml("config/locales/zh_CN.yml") do |datas|
-    datas["zh_CN"]["activerecord"]["models"].merge!(model => model_title)
-    datas["zh_CN"].merge!(table => model_title + "管理")
-    datas["zh_CN"].merge!(model => model_title)
-    datas["zh_CN"]["activerecord"]["attributes"].merge!(model => column_with_titles)
+  rewrite_yaml("config/locales/#{LOCALE_NAME}.yml") do |datas|
+    datas[LOCALE_NAME]["activerecord"]["models"].merge!(model => model_title)
+    datas[LOCALE_NAME].merge!(table => model_title + "管理")
+    datas[LOCALE_NAME].merge!(model => model_title)
+    datas[LOCALE_NAME]["activerecord"]["attributes"].merge!(model => column_with_titles)
   end
 end
 
 def generate_controller(table)
   puts "Begin to config in controllers... #{table}"  
-  f = FileWriter.new("app/controllers/#{table}_controller.rb")
-  f.insert("class #{ActiveSupport::Inflector.titleize(table).gsub(/\s+/,"")}Controller < SunAdminBaseController",-1)
+  f = FileWriter.new(File.join("app", "controllers", SCOPE, "#{table}_controller.rb"))
+  scope = ActiveSupport::Inflector.classify(SCOPE)
+  f.insert("class #{[scope, ActiveSupport::Inflector.titleize(table).gsub(/\s+/,"")].join("::")}Controller < SunAdminBaseController",-1)
   f.insert("end",-1)
   f.save!
 end
@@ -135,6 +141,8 @@ def config_model_to_view(table)
   pos = f.search_line_in_method("top_menus","menus = ")
   f.insert(" " * (f.lines[pos] =~ /\s[a-z]+/) + "{'#{table}' => ''},", pos + 1)
   f.save!
+rescue
+  puts "Can not find method: top_menus, You need to config it by hand"
 end
 
 if action == "new"

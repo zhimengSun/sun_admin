@@ -21,11 +21,15 @@ class FileWriter
     self
   end
 
-  def search_method(n)
+  def search_certain_str(string)
     lines.each_with_index do |line, i|
-      return i if line =~ /def[\s\t]+#{n}/
+      return i if line =~ /#{string}/
     end
     lines.size 
+  end
+
+  def search_method(n)
+    search_certain_str("def[\s\t]+#{n}")
   end
 
   def search_line_in_method(mn, line_content)

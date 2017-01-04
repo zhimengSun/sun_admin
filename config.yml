@@ -1,6 +1,8 @@
 database:
-  name: admin
   user: root
   password:
+
+locale_name: "zh_cn"
+scope: "admin"
 
 

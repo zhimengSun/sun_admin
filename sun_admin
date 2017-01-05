@@ -51,7 +51,7 @@ end
 def init_db(project_name, use_mysql = true)
   if use_mysql
     db_c = Config["database"]
-    default = {"username" => db_c["user"], "database" => db_c["name"] + "_#{project_name}", 
+    default = {"username" => db_c["user"], "database" => [db_c["name"], project_name].join("_"), 
                "password" => db_c["password"], "adapter" => "mysql2"}
     db_file = "#{project_name}/config/database.yml"
     db_config = YAML.load_file(db_file)

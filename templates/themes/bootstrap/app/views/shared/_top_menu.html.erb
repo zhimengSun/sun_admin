@@ -7,13 +7,14 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= t(menu) %><span class="caret"></span></a>
         <ul class="dropdown-menu" role="menu">
           <% sub_menus.each do |sm| %>
-            <li><a href="/<%= sm %>"><%= t(sm) %></a></li>
+            <li><a href="/admin/<%= sm %>"><%= t(sm) %></a></li>
           <% end %>
         </ul>
       </li>
       <% else %>
-        <li <%= request.path == send("#{menu}_path") ? "class=active" : "" %>>
-          <%= link_to t(menu), send("#{menu}_path") %>
+        <% m = send("admin_#{menu}_path") rescue send("#{menu}_path")  %>
+        <li <%= request.path == m ? "class=active" : "" %>>
+          <%= link_to t(menu), m %>
         </li>
       <% end %>
     <% end %>

@@ -3,6 +3,7 @@ class Resource < ActiveRecord::Base
   validates :name, :url, presence: true
 
   scope :supers, -> {where(parent_id: nil)}
+  scope :sub_menus, -> {where.not(parent_id: nil)}
 
   def parent
     Resource.find_by_id(self.parent_id)

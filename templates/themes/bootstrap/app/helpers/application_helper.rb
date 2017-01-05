@@ -23,13 +23,13 @@ module ApplicationHelper
 
   def save_and_return(f) 
     sub_btn = submit_btn 
-    td = content_tag(:td, sub_btn + link_to_back(url: "/#{controller_name}"), colspan: "10", align: "center")
+    td = content_tag(:td, sub_btn + link_to_back(url: "/admin/#{controller_name}"), colspan: "10", align: "center")
     content_tag(:tr, td, style: 'text-align: center')
   end
 
   def edit_with_delete(obj, opts = {})
-    edit_btn = link_to('', "/" + controller_name + "/#{obj.id}/edit", class: 'glyphicon glyphicon-edit mr10')
-    destroy_btn = link_to('', obj, data: {confirm: "确定删除么?"}, method: :delete, class: 'glyphicon glyphicon-trash')
+    edit_btn = link_to('', "/admin/" + controller_name + "/#{obj.id}/edit", class: 'glyphicon glyphicon-edit mr10')
+    destroy_btn = link_to('', [:admin, obj], data: {confirm: "确定删除么?"}, method: :delete, class: 'glyphicon glyphicon-trash')
     return edit_btn if opts[:hide_destory]
     edit_btn + destroy_btn
   end
@@ -63,6 +63,14 @@ module ApplicationHelper
     htitle = content_tag(opts[:h] || :h3, title)
     content_tag(:div, htitle, class: "page-header")
   end
+
+  def create_page?
+    %w(new create).include?(action_name)
+  end 
+
+  def update_page?
+    %w(edit update).include?(action_name)
+  end 
 
   def top_menus
     menu = []

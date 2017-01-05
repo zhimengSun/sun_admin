@@ -6,6 +6,10 @@ Rails.application.routes.draw do
   post "login" => "session#login"
 
   resources :users
-  resources :roles
-  resources :resources
+
+  namespace :admin do
+    resources :users
+    resources :roles
+    resources :resources
+  end
 end

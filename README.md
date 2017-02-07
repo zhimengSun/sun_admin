@@ -1,7 +1,7 @@
 SunAdmin
 =====
 
-### 一个高效便捷的创建后台管理系统的框架。减少大量重复冗余的 view 代码。及其的简化了table和form的书写。
+### An efficient and convenient framework for creating an admin management system. Reduce the number of redundant view codes. And its simplification of the codes about tables and forms in HTML.
 
 
 
@@ -9,7 +9,8 @@ SunAdmin
 
 NOTE:
 ----------
-  目前这是一个未完成的版本，命令调用还需要指明路径，略有不便。
+
+#### It's an unfinished version at present, You must invork the commands by hand with its absolute path。Maybe you can help me to improve that, Is it right?
 
 
 

@@ -131,7 +131,7 @@ def generate_controller(table)
   puts "Begin to config in controllers... #{table}"  
   controllers_dir = File.join("app", "controllers", SCOPE)
   system("mkdir -p #{controllers_dir}")
-  f = FileWriter.new(controllers_dir, "#{table}_controller.rb")
+  f = FileWriter.new(File.join(controllers_dir, "#{table}_controller.rb"))
   scope = ActiveSupport::Inflector.classify(SCOPE)
   f.insert("class #{[scope, ActiveSupport::Inflector.titleize(table).gsub(/\s+/,"")].join("::")}Controller < SunAdminBaseController",-1)
   f.insert("end",-1)

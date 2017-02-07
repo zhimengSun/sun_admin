@@ -2,7 +2,7 @@ database:
   user: root
   password:
 
-locale_name: "zh_cn"
+locale_name: "zh_CN"
 scope: "admin"
 
 

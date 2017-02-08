@@ -5,7 +5,7 @@ require "yaml"
 require "active_record"
 require "pry"
 
-TemplatePath = File.expand_path("../", __FILE__)
+ADMIN_PATH = File.expand_path("../", __FILE__)
 ProjectPath = File.expand_path("../", __FILE__)
 Config = YAML.load_file(File.expand_path("../config.yml", __FILE__))
 LOCALE_NAME = Config["locale_name"]
@@ -68,7 +68,7 @@ def rewrite_yaml(file)
 end
 
 def copy_templates(project_name, theme)
-  base = "#{TemplatePath}/templates/"
+  base = "#{ADMIN_PATH}/admin/"
   files = ["common","themes/#{theme}"]
   files.map {|f| system("cp -rf #{base}#{f}/* #{project_name}/")}
 end

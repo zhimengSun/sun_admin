@@ -10,7 +10,7 @@ SunAdmin
 NOTE:
 ----------
 
-#### It's an unfinished version at present, You must invork the commands by hand with its absolute path。Maybe you can help me to improve that, Is it right?
+#### It's an unfinished version at present, You must invork the commands manually with its absolute path。Maybe you can help me to improve that, Is it right?
 
 
 
@@ -19,18 +19,35 @@ How:
 
 ### 1  git clone git@git.oschina.net:zhimengsun/sun_admin.git
 
-### 2 start a admin project
+### 2 config the command
+> open your ~/.bash_profile or ~/.bashrc file and fill one line with words like this:
 
 ```
-/sun_admin_path/sun_admin new admin_project
+export PATH=/Users/foo/sun_admin_path:$PATH
 
 ```
-### 3 创建新Model
+> NOTE: after that you need to do: 
 
 ```
-/sun_admin_path/sun_admin g model hotel:酒店管理 name:string:酒店名 address:string:地址 is_hot:boolean:是否热门 note:text:酒店描述
+source ~/.bash_profile
+or 
+source ~/.bashrc
+```
+
+
+### 3 start a admin project
+
+```
+sun_admin new admin_project
+
+```
+### 4 创建新Model
+
+```
+sun_admin g model hotel:酒店管理 name:string:酒店名 address:string:地址 is_hot:boolean:是否热门 note:text:酒店描述
 
 ```
 
+### 5 Enjoy auto generated CRUD without any redundant view codes
 
   

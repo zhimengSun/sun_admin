@@ -2,7 +2,7 @@
 - obj = single_obj
 .am-margin
   table class='#{table_class}'
-    - obj.class.used_attrs.each do |a|
+    - (klass.used_attrs + klass.displayed_columns).each do |a|
       tr
         td = localize_attr(a)
         td = obj.send(a) 

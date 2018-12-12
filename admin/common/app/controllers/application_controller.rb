@@ -8,10 +8,12 @@ class ApplicationController < ActionController::Base
 
   private
     def require_login_or_permission
+      !request.user_agent.presence and return render(text: "OK")
+      session[:redirect_to] = request.url
       return redirect_to login_path unless session[:user_id]
-      return true if current_user.can_access?(request.path) || current_user.is_admin?
+      return true if current_user && (current_user.can_access?(request.path) || current_user.is_admin?)
       flash[:danger] = I18n.t(:permission_denied)
-      redirect_to root_path
+      redirect_to URI(session[:redirect_to]).path == root_path ? "/login" : session[:redirect_to]
     end
 
     def back_to_list(condition = true, msg = nil)
